@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Input } from "../../../Components/Forms/Input"
-import { Button } from "../../../Components/Forms/Button"
-import { TransactionTypeButton } from "../../../Components/Forms/TransactionTypeButton"
+import { Input } from "../../../Components/Forms/Input";
+import { Button } from "../../../Components/Forms/Button";
+import { TransactionTypeButton } from "../../../Components/Forms/TransactionTypeButton";
+import { CategorySelect } from "../../../Components/Forms/CategorySelect";
+
 import {
     Container,
     Header,
@@ -45,6 +47,7 @@ export function Register(){
 
                     />
                 </TransactionTypes>  
+                <CategorySelect title="Categoria" />
              </Filds>  
             <Button  title="Enviar"/>
             </Form>
