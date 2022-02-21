@@ -1,4 +1,5 @@
 import React from "react";
+
 import { HighlightCard } from "../../Components/HighlightCard";
 import { TransactionCard, TransactionCardProps} from "../../Components/TransacitonCard"
 
@@ -16,6 +17,7 @@ import {
     Transactions,
     Title,
     TransactionList,
+    LogoutButton,
        } from "./styles";
 
 export interface DataListProps extends TransactionCardProps{
@@ -72,7 +74,9 @@ const data: DataListProps[] = [
                         <UserName>Jhonnata</UserName>
                     </User>
             </UserInfo>
-            <Icon name="power"/>
+            <LogoutButton onPress={() => {}}>
+             <Icon name="power"/>
+            </LogoutButton>
          </UserWrapper>
         </Header>
         <HighlightCards>
