@@ -27,7 +27,7 @@ import {
     Form,
     TransactionTypes,
 } from './styles';
-interface FormData {
+export interface FormData {
     name:string;
     amount:string;
 }
