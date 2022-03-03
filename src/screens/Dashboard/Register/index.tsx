@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { 
     Modal, 
     Keyboard,
     Alert
-} from "react-native";
+} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import uuid from 'react-native-uuid'
 
-import { useForm } from "react-hook-form"
+import { useForm } from 'react-hook-form'
+import { useNavigation } from '@react-navigation/native'
 
-import { InputForm } from "../../../Components/Forms/InputForm"
-import { Button } from "../../../Components/Forms/Button";
-import { TransactionTypeButton } from "../../../Components/Forms/TransactionTypeButton";
-import { CategorySelectButton } from "../../../Components/Forms/CategorySelectButton";
+import { InputForm } from '../../../Components/Forms/InputForm'
+import { Button } from '../../../Components/Forms/Button';
+import { TransactionTypeButton } from '../../../Components/Forms/TransactionTypeButton';
+import { CategorySelectButton } from '../../../Components/Forms/CategorySelectButton';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
@@ -28,6 +30,11 @@ import {
     Form,
     TransactionTypes,
 } from './styles';
+
+type NavigationProps = {
+    navigate:(screens:string) => void;
+ }
+
 export interface FormData {
     name:string;
     amount:string;
@@ -48,20 +55,22 @@ export function Register(){
     const [transactionType, setTransactionType] = useState('');
     const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
-    const dataKey = '@gofinances:transactions';
     const [category, setCategory] = useState({
         key: 'category',
         name: 'Categoria',
     })
+    const  navigation = useNavigation<NavigationProps>();
+
     const {
         control,
         handleSubmit,
+        reset,
         formState: { errors }
     } = useForm({
         resolver: yupResolver(schema)
     });
 
-    function handleTransactionTypesSelect(type: 'up' | 'down'){
+    function handleTransactionTypesSelect(type: 'positive' | 'negative'){
         setTransactionType(type);
     }
     function handleOpenSelctCategoryModal(){
@@ -79,12 +88,16 @@ export function Register(){
 
 
         const newTransaction = {
+            id: String(uuid.v4()),
             name: form.name,    
             amount: form.amount,
-            transactionType,
-            category: category.key
+            type: transactionType,
+            category: category.key,
+            date: new Date()
         }
         try {
+            const dataKey = '@gofinances:transactions';
+
             const data = await AsyncStorage.getItem(dataKey);
             const currentData = data ? JSON.parse(data) : [];
 
@@ -93,24 +106,20 @@ export function Register(){
                 newTransaction
         ];
             await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
+            reset();
+            setTransactionType('');
+            setCategory({
+                key: 'category',
+                name: 'Categoria'
+            });
+
+            navigation.navigate('Listagem');
 
         } catch (error){
           console.log(error);
-          Alert.alert("Não foi possivel salvar");
+          Alert.alert('Não foi possivel salvar');
         }
     }
-    useEffect(() => {
-        async function loadData(){
-            const data = await AsyncStorage.getItem(dataKey)
-            console.log(JSON.parse(data!))
-        }
-        loadData();
-        // async function removeAll(){
-        //     await AsyncStorage.removeItem(dataKey);
-        // }
-        // removeAll();
-
-    }, [])
     return(
     <GestureHandlerRootView style={{flex:1}}>
         <TouchableWithoutFeedback 
@@ -125,32 +134,32 @@ export function Register(){
                 <Form>
                 <Filds>
                     <InputForm 
-                    name="name"
+                    name='name'
                     control={control}
-                    placeholder="Name"
-                    autoCapitalize="sentences"
+                    placeholder='Name'
+                    autoCapitalize='sentences'
                     autoCorrect={false}
                     error={errors.name && errors.name.message}
                     />
                     <InputForm 
-                    name="amount"
+                    name='amount'
                     control={control}
-                    placeholder="Preço"
-                    keyboardType="numeric"
+                    placeholder='Preço'
+                    keyboardType='numeric'
                     error={errors.amount && errors.amount.message}
                     />
                     <TransactionTypes>
                         <TransactionTypeButton 
-                        type="up"
-                        title="Entrada"
-                        onPress={() => handleTransactionTypesSelect('up')}
-                        isActive={transactionType === 'up'}
+                        type='up'
+                        title='Entrada'
+                        onPress={() => handleTransactionTypesSelect('positive')}
+                        isActive={transactionType === 'positive'}
                         />
                         <TransactionTypeButton 
-                        type="down"
-                        title="Saida"
-                        onPress={() => handleTransactionTypesSelect('down')}
-                        isActive={transactionType === 'down'}
+                        type='down'
+                        title='Saida'
+                        onPress={() => handleTransactionTypesSelect('negative')}
+                        isActive={transactionType === 'negative'}
 
                         />
                     </TransactionTypes>  
@@ -160,7 +169,7 @@ export function Register(){
                     />
                 </Filds>  
                 <Button  
-                title="Enviar"
+                title='Enviar'
                 onPress={handleSubmit(handleRegister)}
                 />
                 </Form>
