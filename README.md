@@ -36,7 +36,7 @@ sudo expo start
 <li>Typescript - Superset Javascript</li>
 <li>Expo - Development</li>
 
-🎉 Conquistas
+## 🎉 Conquistas
 <li>Conhecimento maior de AsyncStorage</li>
 <li>Conhecimento maior do Expo e do seu ecossistema</li>
 <li>Conhecimento maior de validação de formulários utilizando o Yup</li>
