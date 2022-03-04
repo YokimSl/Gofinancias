@@ -1,7 +1,6 @@
-# ⚠️ Projeto em Desenvolvimento
 # 🧐 Sobre
 Terceiro aplicativo realizado no curso Ignite da Rocketseat com o objetivo de controlar as finanças pessoais de um usuário.
-
+### ⚠️ Projeto em Desenvolvimento
 ## Pré Requisitos
 
 <li>Node Js</li>
