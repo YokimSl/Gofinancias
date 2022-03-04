@@ -1,6 +1,6 @@
 # Gofinancias
 
-#🧐 Sobre
+# 🧐 Sobre
 Terceiro aplicativo realizado no curso Ignite da Rocketseat com o objetivo de controlar as finanças pessoais de um usuário.
 
 ## Pré Requisitos
