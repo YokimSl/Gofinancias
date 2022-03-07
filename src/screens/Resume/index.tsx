@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { VictoryPie } from "victory-native";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -20,8 +21,10 @@ import {
     MonthSelectButton,
     MonthSelectIcon,
     Month,
+    LoadContainer
 } from './styles'
 import { categories } from "../../utils/categories";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface TransactionData {
     type: 'positive' | 'negative';
@@ -41,10 +44,11 @@ interface CategoryData{
 }
 
 export function Resume(){
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
     
-    const theme = useTheme();
+    const theme = useTheme();   
 
     function handleDateChange(action: 'next' | 'prev'){
         if(action === 'next'){
@@ -52,10 +56,11 @@ export function Resume(){
         }else {
             setSelectedDate(subMonths(selectedDate, 1));
         }
-
+     
     }
 
     async function loadData (){
+        setIsLoading(true)
         const dataKey = '@gofinances:transactions';
         const response = await AsyncStorage.getItem(dataKey);
         const responseFormatted = response ? JSON.parse(response) : [];
@@ -66,7 +71,8 @@ export function Resume(){
         new Date(expensive.date).getFullYear() === selectedDate.getFullYear()
         );
 
-        const expensivesTotal = expensives.reduce((acumulator: number, expensive: TransactionData) => {
+        const expensivesTotal = expensives.reduce(
+            (acumulator: number, expensive: TransactionData) => {
             return acumulator + Number(expensive.amount);
         }, 0);
 
@@ -100,15 +106,24 @@ export function Resume(){
         });
 
         setTotalByCategories(totalByCategory);
+        setIsLoading(false)
     }
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         loadData();
-    },[selectedDate]);
+    },[selectedDate]));
     return (
         <Container>
             <Header>
                 <Title>Resumo por categoria</Title>
             </Header>
+            {
+            isLoading ? 
+            <LoadContainer>
+                <ActivityIndicator 
+                color={theme.colors.primary}
+                size="large"
+                />
+            </LoadContainer> :
         <Content
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -158,6 +173,7 @@ export function Resume(){
             ))
             }
         </Content>
+         }
         </Container>
     );
 }
