@@ -1,4 +1,7 @@
 import React,{useContext} from "react";
+import { Alert } from "react-native";
+import { Button } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import LogoSvg from '../../assets/logo.svg';
 import GoogleSvg from '../../assets/google.svg';
@@ -23,8 +26,24 @@ import {
 } from './styles'
 
 export function SignIn(){
-    const { user } = useAuth();
-    console.log(user)
+    const { signInWithGoogle, signInWithApple } = useAuth();
+    
+    async function handleSignInWithGoogle(){
+        try {
+            await signInWithGoogle(); 
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Não foi possivel conectar a conta Google');
+        }
+    }
+    async function handleSignInWithApple(){
+        try {
+            await signInWithApple(); 
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Não foi possivel conectar a conta Apple');
+        }
+    }
     return(
         <Container>
             <Header>
@@ -47,15 +66,18 @@ export function SignIn(){
 
             <Footer>
                 <FooterWrapper>
+                    <GestureHandlerRootView>
                     <SignInSocialButton 
                     title="Entrar com Google"
                     svg={GoogleSvg}
+                    onPress={handleSignInWithGoogle}
                     />
                     <SignInSocialButton 
                     title="Entrar com Id Apple"
                     svg={AppleSvg}
+                    onPress={handleSignInWithApple}
                     />
-
+                    </GestureHandlerRootView>
                 </FooterWrapper>
             </Footer>
 
