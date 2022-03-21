@@ -1,7 +1,8 @@
-import React,{useContext} from "react";
-import { Alert } from "react-native";
+import React,{useContext, useState} from "react";
+import { ActivityIndicator, Alert, Platform } from "react-native";
 import { Button } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useTheme } from "styled-components";
 
 import LogoSvg from '../../assets/logo.svg';
 import GoogleSvg from '../../assets/google.svg';
@@ -26,22 +27,28 @@ import {
 } from './styles'
 
 export function SignIn(){
+    const [isLoading, setIsLoading] = useState(false);
     const { signInWithGoogle, signInWithApple } = useAuth();
-    
+    const theme = useTheme();
     async function handleSignInWithGoogle(){
         try {
-            await signInWithGoogle(); 
+            setIsLoading(true);
+            return await signInWithGoogle(); 
         } catch (error) {
             console.log(error);
             Alert.alert('Não foi possivel conectar a conta Google');
-        }
+            setIsLoading(false);
+        } 
     }
     async function handleSignInWithApple(){
         try {
-            await signInWithApple(); 
+            setIsLoading(true);
+            return await signInWithApple(); 
         } catch (error) {
             console.log(error);
             Alert.alert('Não foi possivel conectar a conta Apple');
+            setIsLoading(false);
+
         }
     }
     return(
@@ -73,14 +80,23 @@ export function SignIn(){
                     svg={GoogleSvg}
                     onPress={handleSignInWithGoogle}
                     />
+                   { 
+                    Platform.OS === 'ios' &&
                     <SignInSocialButton 
                     title="Entrar com Id Apple"
                     svg={AppleSvg}
                     onPress={handleSignInWithApple}
                     />
+                    }
                 </FooterWrapper>
-            </Footer>
 
+                { isLoading && 
+                <ActivityIndicator  
+                color={theme.colors.shape}
+                style={{ marginTop: 18 }}
+                />
+                }
+            </Footer>
                     </GestureHandlerRootView>
         </Container>
     );
