@@ -56,7 +56,6 @@ export function Resume(){
         }else {
             setSelectedDate(subMonths(selectedDate, 1));
         }
-     
     }
 
     async function loadData (){
@@ -135,7 +134,6 @@ export function Resume(){
                 <MonthSelectButton onPress={() => handleDateChange('prev')}>
                     <MonthSelectIcon name="chevron-left"/>
                 </MonthSelectButton>
-
                 <Month>
                     {format(selectedDate, 'MMMM, yyyy', {locale: ptBR})}
                 </Month>

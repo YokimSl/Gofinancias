@@ -46,6 +46,7 @@ export function SignIn(){
     }
     return(
         <Container>
+            <GestureHandlerRootView>
             <Header>
                 <TitleWrapper>
                     <LogoSvg
@@ -66,7 +67,7 @@ export function SignIn(){
 
             <Footer>
                 <FooterWrapper>
-                    <GestureHandlerRootView>
+                    
                     <SignInSocialButton 
                     title="Entrar com Google"
                     svg={GoogleSvg}
@@ -77,10 +78,10 @@ export function SignIn(){
                     svg={AppleSvg}
                     onPress={handleSignInWithApple}
                     />
-                    </GestureHandlerRootView>
                 </FooterWrapper>
             </Footer>
 
+                    </GestureHandlerRootView>
         </Container>
     );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
-import { Routes } from './src/routes'
+import { Routes } from './src/routes';
 import { AppRoutes } from './src/routes/app.routes';
 
 import { SignIn } from './src/screens/SignIn';
@@ -19,6 +19,7 @@ import 'intl/locale-data/jsonp/pt-BR'
 import theme from './src/global/styles/theme';
 
 import { AuthProvider } from './src/hooks/auth'
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
   const [ fontsLoaded ] = useFonts({
@@ -31,13 +32,14 @@ export default function App() {
     return <AppLoading/>
   }
   return (
-    <ThemeProvider theme={theme}>
-      <StatusBar barStyle="light-content" />
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
-    </ThemeProvider>
-
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider theme={theme}>
+          <StatusBar barStyle="light-content" />
+          <AuthProvider>
+            <Routes />
+          </AuthProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
   );
 }
 
