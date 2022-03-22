@@ -28,6 +28,7 @@ import {
   TransactionList,
   LogoutButton,
   LoadContainer,
+  
 } from "./styles";
 import { number } from "yup";
 
@@ -172,7 +173,6 @@ export function Dashboard() {
   );
   return (
     <Container>
-      <ActivityIndicator />
       {isLoading ? (
         <LoadContainer>
           <ActivityIndicator color={theme.colors.primary} size="large" />
@@ -184,7 +184,7 @@ export function Dashboard() {
               <UserInfo>
                 <Photo source={{ uri: user.photo }} />
                 <User>
-                  <UserGreeting>Olá,</UserGreeting>
+                  <UserGreeting>Olá</UserGreeting>
                   <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
